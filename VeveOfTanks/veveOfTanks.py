@@ -46,12 +46,20 @@ bulletY_change = 5
 bulletX_change = 0
 bullet_state = "ready"
 
+# Finish
+theEnd = pygame.font.Font('freesansbold.ttf', 115)
+theEndX = 350
+theEndY = 400
+
 # Scor
 score_value = 0
 font = pygame.font.Font('freesansbold.ttf', 32)
-
 textX = 10
 textY = 10
+
+def theEndFin(x,y):
+    the_End = font.render("THE END", True, (255, 255, 255))
+    screen.blit(the_End, (x, y))
 
 def showScore(x,y):
     score = font.render("Score: " + str(score_value), True, (255, 255, 255))
@@ -71,6 +79,14 @@ def fire_bullet(x,y):
 # Colision
 def isColision (enemyX, enemyY, bulletX, bulletY):
     distance = math.sqrt((math.pow(enemyX - bulletX, 2)) + (math.pow(enemyY - bulletY, 2))) 
+    if distance <  27:
+        return True
+    else:
+        return False
+
+# Colision with player
+def isColision2 (enemyX, enemyY, playerX, playerY):
+    distance = math.sqrt((math.pow(enemyX - playerX, 2)) + (math.pow(enemyY - playerY, 2))) 
     if distance <  27:
         return True
     else:
@@ -147,6 +163,13 @@ while running:
             enemyX[i] = random.randint(0, 750)
             enemyY[i] = random.randint(20, 110)
 
+        # Collision
+        collision2 = isColision2(enemyX[i], enemyY[i], playerX, playerY)
+        if collision2:
+            playerX = 370
+            playerY = 480            
+            num_of_enemies = 0
+                    
         enemy(enemyX[i], enemyY[i], i)
 
     # Bullet Movement
@@ -157,7 +180,9 @@ while running:
     if bullet_state is "fire":
         fire_bullet(bulletX, bulletY)
         bulletY -= bulletY_change
+    if num_of_enemies == 0:
+        theEndFin(theEndX, theEndY)
 
     player(playerX, playerY)
-    showScore(textX, textY)
+    showScore(textX, textY)  
     pygame.display.update()
